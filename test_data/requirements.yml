@@ -1,0 +1,5 @@
+- src: git+https://github.com/tinoji/ansible-role-sample1
+  version: latest
+
+- src: git+https://github.com/tinoji/ansible-role-sample2
+  version: latest
