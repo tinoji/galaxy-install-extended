@@ -10,6 +10,7 @@ Features
 - if `version: latest` is specified, latest release role is imported.
 
 
+<br>
 Installation
 -------------
 Download binary from [releases](https://github.com/tinoji/galaxy-install-extended/releases), then `chmod +x`, rename and move to your PATH.
@@ -22,7 +23,7 @@ $ GOOS=<os> GOARCH=<arch> go build main.go
 $ mv main /to/your/PATH/galaxy-install-extended
 ```
 
-
+<br>
 Usage
 --------
 ```
@@ -36,7 +37,7 @@ Options:
   See 'ansible-galaxy install --help' for other options
 ```
 
-
+<br>
 Example
 -------
 Use `examples` dir.
@@ -46,13 +47,12 @@ $ cd examples
 $ galaxy-install-extended -r requirements.yml -p roles -f
 ```
 
-
+<br>
 Note
 -----
 When "latest" branch exists too, the "latest" release overrides it.
 
-
+<br>
 License
 --------
 MIT
-
