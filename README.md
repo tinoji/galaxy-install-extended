@@ -4,13 +4,14 @@ ansible-galaxy wrapper to import *latest release* role.
 
 I confused always by version control of many ansible roles... Don't you think the latest release must be importd by `version: latest`?
 
+<br>
 
 Features
 ---------
 - if `version: latest` is specified, latest release role is imported.
 
-
 <br>
+
 Installation
 -------------
 Download binary from [releases](https://github.com/tinoji/galaxy-install-extended/releases), then `chmod +x`, rename and move to your PATH.
@@ -24,6 +25,7 @@ $ mv main /to/your/PATH/galaxy-install-extended
 ```
 
 <br>
+
 Usage
 --------
 ```
@@ -38,6 +40,7 @@ Options:
 ```
 
 <br>
+
 Example
 -------
 Use `examples` dir.
@@ -48,11 +51,13 @@ $ galaxy-install-extended -r requirements.yml -p roles -f
 ```
 
 <br>
+
 Note
 -----
 When "latest" branch exists too, the "latest" release overrides it.
 
 <br>
+
 License
 --------
 MIT
