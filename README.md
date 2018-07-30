@@ -12,6 +12,12 @@ Features
 
 <br>
 
+Requirements
+------------
+`ansible-galaxy` command.
+
+<br>
+
 Installation
 -------------
 Download binary from [releases](https://github.com/tinoji/galaxy-install-extended/releases), then `chmod +x`, rename and move to your PATH.
@@ -39,6 +45,8 @@ Options:
   See 'ansible-galaxy install --help' for other options
 ```
 
+`-r` is required. The other options are interpreted as options of normal `ansible-galaxy`.
+
 <br>
 
 Example
@@ -54,7 +62,7 @@ $ galaxy-install-extended -r requirements.yml -p roles -f
 
 Note
 -----
-When "latest" branch exists too, the "latest" release overrides it.
+When "latest" branch exists too, the latest release overrides it.
 
 <br>
 
