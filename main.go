@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	// flags "github.com/jessevdk/go-flags"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -13,10 +12,6 @@ import (
 
 	yaml "gopkg.in/yaml.v2"
 )
-
-// const (
-// 	GitHubEndpoint = "https://api.github.com"
-// )
 
 type Role struct {
 	Src     string `yaml:"src"`
