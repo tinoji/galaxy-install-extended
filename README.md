@@ -12,14 +12,14 @@ Features
 
 Installation
 -------------
-Download binary from [releases](https://github.com/tinoji/galaxy-install-extended/releases).
+Download binary from [releases](https://github.com/tinoji/galaxy-install-extended/releases), then `chmod +x`, rename and move to your PATH.
 
 Or, build yourself like the following:
 ```
 $ git clone https://github.com/tinoji/galaxy-install-extended
 $ cd galaxy-install-extended
 $ GOOS=<os> GOARCH=<arch> go build main.go
-$ mv main /usr/local/bin/somewhere/galaxy-install-extended
+$ mv main /to/your/PATH/galaxy-install-extended
 ```
 
 
