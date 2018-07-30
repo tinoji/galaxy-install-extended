@@ -14,6 +14,10 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+// const (
+// 	GitHubEndpoint = "https://api.github.com"
+// )
+
 type Role struct {
 	Src     string `yaml:"src"`
 	Version string `yaml:"version"`
@@ -23,14 +27,17 @@ type Release struct {
 	TagNmae string `json:"tag_name"`
 }
 
+var endpoint = "https://api.github.com"
+
 func main() {
 	// args
-	// TODO: Github Enterprise API endpoint and proxy option
 	if os.Args[1] == "-h" || os.Args[1] == "--help" {
 		fmt.Println("Usage: galaxy-install-extended -r FILE [options]\n\n" +
 			"Options:\n" +
-			"  -h, --help	show this help message and exit\n" +
-			"  -r ROLE_FILE	A file containing a list of roles to be imported\n" +
+			"  -h, --help               show this help message and exit\n" +
+			"  -r ROLE_FILE             A file containing a list of roles to be imported\n" +
+			"  -e GITHUB_API_ENDPOINT   API endpoint for GitHub Enterprise. The default is\n" +
+			"                           https://api.github.com\n\n" +
 			"  See 'ansible-galaxy install --help' for other options")
 
 		os.Exit(0)
@@ -39,9 +46,16 @@ func main() {
 	if os.Args[1] != "-r" {
 		log.Fatal("First option must be -r ROLE_FILE")
 	}
-
 	reqFile := os.Args[2]
-	otherOpts := strings.Join(os.Args[3:len(os.Args)], " ")
+
+	var otherOpts string
+
+	if os.Args[3] == "-e" {
+		endpoint = os.Args[4]
+		otherOpts = strings.Join(os.Args[5:len(os.Args)], " ")
+	} else {
+		otherOpts = strings.Join(os.Args[3:len(os.Args)], " ")
+	}
 
 	// read yaml and conv "lastet" to latest release
 	buf, err := ioutil.ReadFile(reqFile)
@@ -94,7 +108,7 @@ func getRepoName(src string) string {
 }
 
 func getTagName(repo string) string {
-	url := "https://api.github.com/repos/" + repo + "/releases/latest"
+	url := endpoint + "/repos/" + repo + "/releases/latest"
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
