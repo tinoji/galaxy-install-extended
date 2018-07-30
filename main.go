@@ -6,11 +6,16 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"strings"
 
 	yaml "gopkg.in/yaml.v2"
+)
+
+const (
+	GitHubEndpoint = "https://api.github.com"
 )
 
 type Role struct {
@@ -22,17 +27,13 @@ type Release struct {
 	TagNmae string `json:"tag_name"`
 }
 
-var endpoint = "https://api.github.com"
-
 func main() {
 	// args
 	if os.Args[1] == "-h" || os.Args[1] == "--help" {
 		fmt.Println("Usage: galaxy-install-extended -r FILE [options]\n\n" +
 			"Options:\n" +
-			"  -h, --help               show this help message and exit\n" +
-			"  -r ROLE_FILE             A file containing a list of roles to be imported\n" +
-			"  -e GITHUB_API_ENDPOINT   API endpoint for GitHub Enterprise. The default is\n" +
-			"                           https://api.github.com\n\n" +
+			"  -h, --help      show this help message and exit\n" +
+			"  -r ROLE_FILE    A file containing a list of roles to be imported\n\n" +
 			"  See 'ansible-galaxy install --help' for other options")
 
 		os.Exit(0)
@@ -43,14 +44,7 @@ func main() {
 	}
 	reqFile := os.Args[2]
 
-	var otherOpts string
-
-	if os.Args[3] == "-e" {
-		endpoint = os.Args[4]
-		otherOpts = strings.Join(os.Args[5:len(os.Args)], " ")
-	} else {
-		otherOpts = strings.Join(os.Args[3:len(os.Args)], " ")
-	}
+	otherOpts := strings.Join(os.Args[3:len(os.Args)], " ")
 
 	// read yaml and conv "lastet" to latest release
 	buf, err := ioutil.ReadFile(reqFile)
@@ -65,9 +59,21 @@ func main() {
 	}
 
 	for i, role := range roles {
-		if role.Version == "latest" {
+		if role.Version != "latest" {
+			continue
+		}
+
+		if u, err := url.ParseRequestURI(role.Src); err == nil {
+			var endpoint string
+
+			if u.Hostname() == "github.com" {
+				endpoint = GitHubEndpoint
+			} else {
+				endpoint = "https://" + u.Hostname() + "/api/v3"
+			}
+
 			repo := getRepoName(role.Src)
-			tag := getTagName(repo)
+			tag := getTagName(repo, endpoint)
 			roles[i].Version = tag
 		}
 	}
@@ -75,7 +81,7 @@ func main() {
 	d, err := yaml.Marshal(&roles)
 
 	// make tmp file
-	tmpFile, _ := ioutil.TempFile("", "tmp")
+	tmpFile, _ := ioutil.TempFile("", "galaxy-install-extended_tmp")
 	tmpFile.Write(([]byte)(d))
 
 	tmpYaml := tmpFile.Name() + ".yml"
@@ -99,11 +105,16 @@ func main() {
 func getRepoName(src string) string {
 	s := strings.Split(src, "/")
 	len := len(s)
-	return s[len-2] + "/" + s[len-1]
+	user := s[len-2]
+	repo := s[len-1]
+	repo = strings.Split(repo, ".")[0]
+
+	return user + "/" + repo
 }
 
-func getTagName(repo string) string {
+func getTagName(repo, endpoint string) string {
 	url := endpoint + "/repos/" + repo + "/releases/latest"
+
 	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
