@@ -8,7 +8,16 @@ I confused always by version control of many ansible roles... Don't you think th
 
 Features
 ---------
-- if `version: latest` is specified, latest release role is imported.
+- When `version: latest` is specified in roles file(`requirements.yml`, for example), latest release role is imported.
+
+<br>
+
+Supported SCMs and Hosting Services
+------------------------------------
+- galaxy
+- git
+  - Github
+  - Github Enterprise
 
 <br>
 
@@ -53,6 +62,16 @@ Example
 -------
 Use `examples` dir.
 
+`reqirements.yml`:
+```yaml
+- src: git+https://github.com/tinoji/ansible-role-sample1
+  version: latest
+
+- src: git+https://github.com/tinoji/ansible-role-sample2
+  version: latest
+```
+
+You can try like following:
 ```
 $ cd examples
 $ galaxy-install-extended -r requirements.yml -p roles -f
@@ -60,7 +79,7 @@ $ galaxy-install-extended -r requirements.yml -p roles -f
 
 <br>
 
-Note
+Notes
 -----
 When "latest" branch exists too, the latest release overrides it.
 
